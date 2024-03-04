@@ -22,21 +22,45 @@ INSTRUCTIONS / CONSIDERATIONS:
 const initialState = {
   balance: 0,
   loan: 0,
+  hasLoan: false,
   isActive: false,
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "open":
-      return {...state,balance:500,loan:0,isActive:true};
+      return { ...state, balance: 500, loan: 0, isActive: true };
+
+    case "deposit":
+      return { ...state, balance: state.balance + 150 };
+
+    case "withdraw":
+      return { ...state, balance: state.balance - 50 };
+
+    case "reqloan":
+      if (state.hasLoan) return { ...state };
+      else {
+        return {
+          ...state,
+          balance: state.balance + 5000,
+          loan: 5000,
+          hasLoan: true,
+        };
+      }
+
+    case "payloan":
+      return;
+
     default:
       return;
   }
 }
 
 export default function App() {
-  const [{ balance, loan, isActive }, dispatch
-] = useReducer(reducer,initialState);
+  const [{ balance, loan, isActive }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   return (
     <div className="App">
       <h1>useReducer Bank Account</h1>
@@ -49,17 +73,26 @@ export default function App() {
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={isActive ? false : true}>
+        <button
+          onClick={() => dispatch({ type: "deposit" })}
+          disabled={isActive ? false : true}
+        >
           Deposit 150
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={isActive ? false : true}>
+        <button
+          onClick={() => dispatch({ type: "withdraw" })}
+          disabled={isActive ? false : true}
+        >
           Withdraw 50
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={isActive ? false : true}>
+        <button
+          onClick={() => dispatch({ type: "reqloan" })}
+          disabled={isActive ? false : true}
+        >
           Request a loan of 5000
         </button>
       </p>
